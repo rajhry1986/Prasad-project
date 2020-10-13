@@ -1,0 +1,31 @@
+Flowchart Explanation:
+
+Step 1. We need to ensure that the ansible playbook or the shell script is in place in the s3 bucket. This step is to be 
+      perfomed by application team. 
+	  
+Step 2. Application team has to create the resource group pointing to the ec2 instances for the deployments.
+	  
+Step 3. Application team has to create the parameter store in SSM which specifies details resources requried for the workflow: Few parameters are defined
+		as:
+		playbookFile - (Re
+quired) Ansible playbook file name including 'path'. The playbook file will be delivered and launched by framework on a target host.
+		inventoryFile - (Optional) Ansible inventory file
+		extraVars - Ansible properties file will be copied to target host during automation run time
+		scriptFile - (Required for shll script executtion) Shell script file name including path. Same will be copied to target host during executtion of
+			automation.
+		maxConcurrency - (Optional) Maximum number of instances allowed to run the command in ssm automation
+		maxErrorss - Threshold of errors after which the automation will be stopped and marked failed
+		rebootRequired - (Optional) Indicates if target host needs to be rebooted after script or playbook executtion completed
+		snsReportToTopic - (Optional) Automation sends execution report to specified SNS topic.
+		
+
+Step 4. Through aws console, access service catalogs, search for "gd4" portfolio and then search for "ec2-cots-automation" product. After selecting this a new
+		version of framework workflow can be created. This will create the required components in the framework, i.e lambda function, SSM Automation, etc.
+	
+Step 5. Access the ec2 instance launched through the framework using ssm session manager and create the menu options script in /opt/ec2cotsautomation directory.
+        The script should have menus pointing to the parameter stores created in step 3.
+		
+Step 6. Execute the script "showmenu.sh" as inside "opt/ec2cotsautomation" on the ec2 instance.
+
+Step 7. The selection from the showmenu.sh script executes the lambda function which triggers the SSM automation. This also includes updating the 
+		SSM documents with the details input from parameter stores. The parameters include playbook name, s3 bucket name 
