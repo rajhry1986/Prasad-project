@@ -1,0 +1,33 @@
+description: Automate Selinux State 
+schemaVersion: '0.3'
+parameters:
+  InstanceID:
+    type: String
+    description: Instance-Id on which automation has to be run
+mainSteps:
+- name: SetSelinux
+  action: 'aws:runCommand'
+  inputs:
+    DocumentName: docker-selinux-raj
+    InstanceIds:
+      - '{{InstanceID}}'
+- name: StopInstance
+  action: 'aws:changeInstanceState'
+  maxAttempts: 3
+  timeoutSeconds: 180
+  onFailure: Abort
+  inputs:
+    InstanceIds:
+      - '{{InstanceID}}'
+    CheckStateOnly: false
+    DesiredState: stopped
+- name: StartInstance
+  action: 'aws:changeInstanceState'
+  maxAttempts: 3
+  timeoutSeconds: 180
+  onFailure: Abort
+  inputs:
+    InstanceIds:
+      - '{{InstanceID}}'
+    CheckStateOnly: false
+    DesiredState: running

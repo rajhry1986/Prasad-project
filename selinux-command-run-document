@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "2.2",
+  "description": "Document to install Docker and Set Selinux State",
+  "parameters": {
+    "TimeoutSeconds": {
+      "type": "String",
+      "description": "(Optional) The time in seconds for a command to be completed before it is considered to have failed.",
+      "default": "3600"
+    }
+  },
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "runShellScript",
+      "inputs": {
+        "timeoutSeconds": "{{ TimeoutSeconds }}",
+        "runCommand": [
+          "#!/bin/bash",
+          "echo Setting up Selinux state to enforcing",
+          "SESTATE=`getenforce` ",
+          "if [[ $SESTATE != \"Enforcing\" ]]",
+          "then",
+          "   sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/sysconfig/selinux ",
+          "   if [[ $? == \"0\" ]] ; then ",
+          "      echo Selinux is changed to Enforcing",
+          "      else",
+          "      echo Could not replace state in the sysconfig file",
+          "   fi",
+          "else",
+          "    echo Selinux is already in Enforcing mode",
+          "fi"
+        ]
+      }
+    }
+  ]
+}
