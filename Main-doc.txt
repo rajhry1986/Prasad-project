@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "0.3",
+  "description": "Document to trigger launching lambda",
+  "parameters": {
+    "TimeoutSeconds": {
+      "type": "String",
+      "description": "(Optional) The time in seconds for a command to be completed before it is considered to have failed.",
+      "default": "60"
+    },
+	"InstanceID" {
+	  "type": "String"
+	}
+  },
+  "mainSteps": [
+    {
+      "action": "aws:invokeLambdaFunction",
+      "name": "RunLaunchingLambda",
+      "inputs": {
+        "FunctionName": "Raj-test-function",
+        "Payload": "{\"name\": \"Rajkumar\" }"
+      }
+    }
+  ]
+}
