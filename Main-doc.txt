@@ -8,7 +8,9 @@
       "default": "60"
     },
 	"InstanceID" {
-	  "type": "String"
+	  "type": "StringList",
+	  "minItems":1,
+	  "displayType":"textarea"
 	}
   },
   "mainSteps": [
@@ -17,7 +19,10 @@
       "name": "RunLaunchingLambda",
       "inputs": {
         "FunctionName": "Raj-test-function",
-        "Payload": "{\"name\": \"Rajkumar\" }"
+        "Payload": "{
+            \"InstanceIDs\" : \"{{ InstanceID }}\",
+			\"{{ssm:DockerDeployTest}}\"
+			}"
       }
     }
   ]
